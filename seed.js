@@ -1,6 +1,6 @@
 var db = require('./models');
 
-var vacationList = [
+var vacation_list = [
   {
     destination: 'Costa Rica',
     date: '7/4/15',

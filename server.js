@@ -73,14 +73,14 @@ app.get('/api/profile', function getProfile (req, res) {
     res.json(profile);
 });
 // get all Vacations
-app.get('/api/vacation', function (req, res) {
+app.get('/api/vacations', function (req, res) {
   //send all vacations as JSON response
-  db.vacation.find({})
+  db.Vacation.find({})
     .exec(function(err, vacations){
       if (err) {
         return console.log(err);
       }
-      res.json(vacation);
+      res.json(vacations);
     });
   });
 //create new vacation
