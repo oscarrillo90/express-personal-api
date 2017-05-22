@@ -2,6 +2,7 @@
 var express = require('express'),
     app = express();
 
+
 // parse incoming urlencoded form data
 // and populate the req.body object
 var bodyParser = require('body-parser');
@@ -19,7 +20,7 @@ app.use(function(req, res, next) {
  * DATABASE *
  ************/
 
-// var db = require('./models');
+ var db = require('./models');
 
 /**********
  * ROUTES *
@@ -56,6 +57,53 @@ app.get('/api', function apiIndex(req, res) {
       {method: "POST", path: "/api/campsites", description: "E.g. Create a new campsite"} // CHANGE ME
     ]
   })
+});
+
+app.get('/api/profile', function getProfile (req, res) {
+  var profile = ({
+    name: 'Oscar Carrillo',
+    githubUsername: 'oscarrillo90',
+    githubLink: 'https://github.com/oscarrillo90',
+    githubProfileImage: 'https://avatars3.githubusercontent.com/u/22487260?v=3&u=69dd41f3a08403cf64edd34bff11c7430bb4e905&s=400',
+    personalSiteLink: 'oscarcarrillo.com',
+    currentCity: 'Austin',
+  });
+    res.json(profile);
+});
+// get all Vacations
+app.get('/api/vacation', function (req, res) {
+  //send all vacations as JSON response
+  db.vacation.find(req.params, function(err, data){
+    res.json(vacationList);
+  })
+
+})
+//create new vacation
+// app.post('/api/vacation', function (req, res) {
+//   // create new book with form data (`req.body`)
+//   var newVacation = new db.Vacation({
+//     destination: req.body.destination,
+//     date: req.body.date,
+//     duration: req.body.duration,
+//     photo: req.body.image
+//   });
+//
+//   // delete book
+// app.delete('/api/vacation/:id', function (req, res) {
+//   // get book id from url params (`req.params`)
+//   console.log('vacation delete', req.params);
+//   var vacationId = req.params.id;
+//   // find the index of the book we want to remove
+//   db.Vacation.findOneAndRemove({ _id: vacationId }, function (err, deletedVacation) {
+//     res.json(deletedVacation);
+//   });
+// });
+//
+// // get one vacation
+app.get('/api/vacation/:id', function (req, res) {
+  db.Vacation.findOne({_id: req.params.id }, function(err, data) {
+    res.json(data);
+  });
 });
 
 /**********
