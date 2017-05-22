@@ -47,18 +47,20 @@ app.get('/api', function apiIndex(req, res) {
   // TODO: Document all your api endpoints below as a simple hardcoded JSON object.
   // It would be seriously overkill to save any of this to your database.
   res.json({
-    woopsIForgotToDocumentAllMyEndpoints: true, // CHANGE ME ;)
-    message: "Welcome to my personal api! Here's what you need to know!",
-    documentationUrl: "https://github.com/example-username/express-personal-api/README.md", // CHANGE ME
-    baseUrl: "http://YOUR-APP-NAME.herokuapp.com", // CHANGE ME
+    message: "Welcome to my personal api. Routes are below! Learn about my vacations :)",
+    documentationUrl: "https://github.com/oscarrillo90/express-personal-api",
+    baseUrl: "https://peaceful-journey-87045.herokuapp.com/",
     endpoints: [
       {method: "GET", path: "/api", description: "Describes all available endpoints"},
-      {method: "GET", path: "/api/profile", description: "Data about me"}, // CHANGE ME
-      {method: "POST", path: "/api/campsites", description: "E.g. Create a new campsite"} // CHANGE ME
+      {method: "GET", path: "/api/profile", description: "Data about me"},
+      {method: "GET", path: "/api/vacation", description: "List of all vacations"},
+      {method: "GET", path: "/api/vacation/:id", description: "Get vacations by ID"},
+      {method: "POST", path: "/api/vacation/", description: "Create a new vacation"},
+      {method: "PUT", path: "/api/vacation/:id", description: "Update vacations by ID"},
+      {method: "DELETE", path: "/api/vacation/:id", description: "Delete vacation by ID"}
     ]
   })
 });
-
 app.get('/api/profile', function getProfile (req, res) {
   var profile = ({
     name: 'Oscar Carrillo',
@@ -73,11 +75,14 @@ app.get('/api/profile', function getProfile (req, res) {
 // get all Vacations
 app.get('/api/vacation', function (req, res) {
   //send all vacations as JSON response
-  db.vacation.find(req.params, function(err, data){
-    res.json(vacationList);
-  })
-
-})
+  db.vacation.find({})
+    .exec(function(err, vacations){
+      if (err) {
+        return console.log(err);
+      }
+      res.json(vacation);
+    });
+  });
 //create new vacation
 // app.post('/api/vacation', function (req, res) {
 //   // create new book with form data (`req.body`)
