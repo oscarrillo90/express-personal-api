@@ -53,14 +53,16 @@ app.get('/api', function apiIndex(req, res) {
     endpoints: [
       {method: "GET", path: "/api", description: "Describes all available endpoints"},
       {method: "GET", path: "/api/profile", description: "Data about me"},
-      {method: "GET", path: "/api/vacation", description: "List of all vacations"},
-      {method: "GET", path: "/api/vacation/:id", description: "Get vacations by ID"},
-      {method: "POST", path: "/api/vacation/", description: "Create a new vacation"},
+      {method: "GET", path: "/api/vacations", description: "List of all vacations"},
+      {method: "GET", path: "/api/vacations/:id", description: "Get vacations by ID"},
+      {method: "POST", path: "/api/vacations/", description: "Create a new vacation"},
       {method: "PUT", path: "/api/vacation/:id", description: "Update vacations by ID"},
-      {method: "DELETE", path: "/api/vacation/:id", description: "Delete vacation by ID"}
+      {method: "DELETE", path: "/api/vacations/:id", description: "Delete vacation by ID"}
     ]
   })
 });
+
+// show profile
 app.get('/api/profile', function getProfile (req, res) {
   var profile = ({
     name: 'Oscar Carrillo',
@@ -72,6 +74,14 @@ app.get('/api/profile', function getProfile (req, res) {
   });
     res.json(profile);
 });
+
+// get one vacation by id
+app.get('/api/vacations/:id', function (req, res) {
+  db.Vacation.findOne({_id: req.params.id }, function(err, data) {
+    res.json(data);
+  });
+});
+
 // get all Vacations
 app.get('/api/vacations', function (req, res) {
   //send all vacations as JSON response
@@ -83,31 +93,32 @@ app.get('/api/vacations', function (req, res) {
       res.json(vacations);
     });
   });
+
 //create new vacation
-// app.post('/api/vacation', function (req, res) {
-//   // create new book with form data (`req.body`)
-//   var newVacation = new db.Vacation({
-//     destination: req.body.destination,
-//     date: req.body.date,
-//     duration: req.body.duration,
-//     photo: req.body.image
-//   });
-//
-//   // delete book
-// app.delete('/api/vacation/:id', function (req, res) {
-//   // get book id from url params (`req.params`)
-//   console.log('vacation delete', req.params);
-//   var vacationId = req.params.id;
-//   // find the index of the book we want to remove
-//   db.Vacation.findOneAndRemove({ _id: vacationId }, function (err, deletedVacation) {
-//     res.json(deletedVacation);
-//   });
-// });
-//
-// // get one vacation
-app.get('/api/vacation/:id', function (req, res) {
-  db.Vacation.findOne({_id: req.params.id }, function(err, data) {
-    res.json(data);
+app.post('/api/vacations', function (req, res) {
+  // create new book with form data (`req.body`)
+  var newVacation = new db.Vacation({
+    destination: req.body.destination,
+    date: req.body.date,
+    duration: req.body.duration,
+    image: req.body.image
+  });
+  // console.log(req.body);
+  db.Vacation.create(newVacation, function(err, succ) {
+    if (err) {return console.log(err)}
+    res.json(succ);
+  });
+});
+
+  // delete vacation
+app.delete('/api/vacations/:id', function (req, res) {
+  // get book id from url params (`req.params`)
+  console.log('vacation delete', req.params);
+  var vacationId = req.params.id;
+  // find the index of the book we want to remove
+  db.Vacation.findOneAndRemove({ _id: vacationId })
+  .exec(function (err, deletedVacation) {
+    res.json(deletedVacation);
   });
 });
 
